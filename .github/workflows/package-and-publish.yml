@@ -1,0 +1,51 @@
+name: Package and Publish
+on:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+jobs:
+  publish:
+    name: Package and Publish
+    runs-on:
+      - ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - id: checkout
+        uses: actions/checkout@v4
+      - id: setup-tools
+        uses: buildpacks/github-actions/setup-tools@v5.6.0
+      - id: setup-pack
+        uses: buildpacks/github-actions/setup-pack@v5.6.0
+      - id: login-docker
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+      - id: package-buildpack
+        run: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          cd buildpacks
+          ORG="ghcr.io/${GITHUB_REPOSITORY_OWNER}"
+          BP_ID="$(cat test-info/buildpack.toml | yj -t | jq -r .buildpack.id)"
+          REPO="$(echo "$BP_ID" | sed 's/.*\///')"
+          VERSION="$(cat test-info/buildpack.toml | yj -t | jq -r .buildpack.version)"
+          PACKAGE="${ORG}/${REPO}"
+          pack buildpack package ${PACKAGE}:${VERSION} --config package.toml --publish 
+          cd ..
+        shell: bash
+      - id: package-builder
+        run: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          cd builder
+          ORG="ghcr.io/${GITHUB_REPOSITORY_OWNER}"
+          REPO=$(echo "${{ github.repository }}" | sed 's/^.*\///')
+          VERSION="${{ github.ref_name }}"
+          PACKAGE="${ORG}/${REPO}"
+          pack builder create "${PACKAGE}:${VERSION}" --config builder.toml --publish
+          cd ..
+        shell: bash

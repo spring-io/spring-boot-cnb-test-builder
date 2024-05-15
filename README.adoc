@@ -1,0 +1,24 @@
+= Spring Boot Test Builder
+
+This repository contains a Cloud Native Buildpacks (CNB) https://buildpacks.io/docs/concepts/components/builder/[builder] and https://buildpacks.io/docs/concepts/components/buildpack/[buildpack] that are used by Spring Boot integration tests.
+
+NOTE: Use of the builder and buildpack by a CNB platform do not result in a usable image, but provide information that can be verified in tests to ensure that the Spring Boot CNB integration is working properly.
+
+== Building Locally
+
+The builder and buildpack can be built locally for testing.
+The steps below require the https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/[`pack` CLI] to be installed.
+
+=== Building the Builder
+
+```bash
+cd builder
+pack builder create ghcr.io/spring-io/spring-boot-cnb-test-builder --config builder.toml
+```
+
+=== Building the Buildpack
+
+```bash
+cd buildpacks
+pack buildpack package ghcr.io/spring-io/spring-boot-test-info --config package.toml
+```
