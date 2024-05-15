@@ -44,7 +44,8 @@ jobs:
           cd builder
           ORG="ghcr.io/${GITHUB_REPOSITORY_OWNER}"
           REPO=$(echo "${{ github.repository }}" | sed 's/^.*\///')
-          VERSION="${{ github.ref_name }}"
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#v}"
           PACKAGE="${ORG}/${REPO}"
           pack builder create "${PACKAGE}:${VERSION}" --config builder.toml --publish
           cd ..

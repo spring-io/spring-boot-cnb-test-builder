@@ -1,0 +1,12 @@
+.classpath
+.project
+.settings/
+.idea
+*.iml
+*.ipr
+*.iws
+.vscode
+.*.md.html
+.DS_Store
+.attach_pid*
+.sts4-cache
