@@ -34,7 +34,7 @@ jobs:
           REPO="$(echo "$BP_ID" | sed 's/.*\///')"
           VERSION="$(cat test-info/buildpack.toml | yj -t | jq -r .buildpack.version)"
           PACKAGE="${ORG}/${REPO}"
-          pack buildpack package ${PACKAGE}:${VERSION} --config package.toml --target "linux/amd64" --target "linux/arm64 --publish 
+          pack buildpack package ${PACKAGE}:${VERSION} --config package.toml --target "linux/amd64" --target "linux/arm64" --publish 
           cd ..
         shell: bash
       - id: package-builder
@@ -47,6 +47,6 @@ jobs:
           TAG="${{ github.ref_name }}"
           VERSION="${TAG#v}"
           PACKAGE="${ORG}/${REPO}"
-          pack builder create "${PACKAGE}:${VERSION}" --config builder.toml --target "linux/amd64" --target "linux/arm64 --publish
+          pack builder create "${PACKAGE}:${VERSION}" --config builder.toml --target "linux/amd64" --target "linux/arm64" --publish
           cd ..
         shell: bash
