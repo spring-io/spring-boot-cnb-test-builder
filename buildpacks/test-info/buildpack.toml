@@ -4,7 +4,7 @@ api = "0.10"
 # Buildpack ID and metadata
 [buildpack]
 id = "spring-boot/spring-boot-test-info"
-version = "0.0.1"
+version = "0.0.2"
 name = "Spring Boot Test Info Buildpack"
 homepage = "https://github.com/spring-projects/spring-boot"
 
