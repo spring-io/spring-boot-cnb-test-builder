@@ -24,6 +24,19 @@ jobs:
           registry: ghcr.io
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
+      - id: package-buildpack-amd64-only
+        run: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          cd buildpacks
+          ORG="ghcr.io/${GITHUB_REPOSITORY_OWNER}"
+          BP_ID="$(cat test-info/buildpack.toml | yj -t | jq -r .buildpack.id)"
+          REPO="$(echo "$BP_ID" | sed 's/.*\///')"
+          VERSION="$(cat test-info/buildpack.toml | yj -t | jq -r .buildpack.version)"
+          PACKAGE="${ORG}/${REPO}"
+          pack buildpack package "${PACKAGE}:${VERSION}-amd64" --config package.toml --target "linux/amd64" --publish 
+          cd ..
+        shell: bash
       - id: package-buildpack
         run: |
           #!/usr/bin/env bash
@@ -34,7 +47,20 @@ jobs:
           REPO="$(echo "$BP_ID" | sed 's/.*\///')"
           VERSION="$(cat test-info/buildpack.toml | yj -t | jq -r .buildpack.version)"
           PACKAGE="${ORG}/${REPO}"
-          pack buildpack package ${PACKAGE}:${VERSION} --config package.toml --target "linux/amd64" --target "linux/arm64" --publish 
+          pack buildpack package "${PACKAGE}:${VERSION}" --config package.toml --target "linux/amd64" --target "linux/arm64" --publish 
+          cd ..
+        shell: bash
+      - id: package-builder-amd64-only
+        run: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          cd builder
+          ORG="ghcr.io/${GITHUB_REPOSITORY_OWNER}"
+          REPO=$(echo "${{ github.repository }}" | sed 's/^.*\///')
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#v}"
+          PACKAGE="${ORG}/${REPO}"
+          pack builder create "${PACKAGE}:${VERSION}-amd64" --config builder.toml --target "linux/amd64" --publish
           cd ..
         shell: bash
       - id: package-builder
