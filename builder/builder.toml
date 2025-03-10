@@ -1,14 +1,14 @@
 # Buildpacks to include in builder
 [[buildpacks]]
 id = "spring-boot/spring-boot-test-info"
-version = "0.0.2"
+version = "0.0.3"
 uri = "../buildpacks/test-info"
 
 # Order used for detection
 [[order]]
 [[order.group]]
 id = "spring-boot/spring-boot-test-info"
-version = "0.0.2"
+version = "0.0.3"
 
 # Base images used to create the builder
 [build]
