@@ -1,28 +1,22 @@
 # Buildpacks to include in builder
 [[buildpacks]]
 id = "spring-boot/spring-boot-test-info"
-version = "0.0.3"
+version = "0.0.4"
 uri = "../buildpacks/test-info"
 
 # Order used for detection
 [[order]]
 [[order.group]]
 id = "spring-boot/spring-boot-test-info"
-version = "0.0.3"
+version = "0.0.4"
 
 # Base images used to create the builder
 [build]
-image = "paketobuildpacks/build-noble-tiny"
+image = "paketobuildpacks/ubuntu-resolute-build"
 [run]
 [[run.images]]
-image = "paketobuildpacks/run-noble-tiny"
-
-# Stack that will be used by the builder (deprecated)
-[stack]
-id = "io.buildpacks.stacks.noble.tiny"
-build-image = "paketobuildpacks/build-noble-tiny"
-run-image = "paketobuildpacks/run-noble-tiny"
+image = "paketobuildpacks/ubuntu-resolute-run-tiny"
 
 # Lifecycle executable version that will be used by the builder
 [lifecycle]
-version = "0.20.5"
+version = "0.21.20"
